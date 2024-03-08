@@ -1,3 +1,18 @@
+#define PIN_SENSOR_LEFT A5
+#define PIN_SENSOR_RIGHT A4
+
+#define SENSOR_THRESHOLD 250
+
+#define PIN_MOTOR_LEFT_IN1 7
+#define PIN_MOTOR_LEFT_IN2 8
+#define PIN_MOTOR_LEFT_PWM 10
+
+#define PIN_MOTOR_RIGHT_IN1 5
+#define PIN_MOTOR_RIGHT_IN2 6
+#define PIN_MOTOR_RIGHT_PWM 9
+
+#define MOTOR_TOP_SPEED 255
+
 #include "Motor.h"
 
 Motor left_motor;
@@ -7,32 +22,32 @@ bool last_time_left = false;
 bool last_time_right = false;
 
 bool is_line(int value) {  
-  return value > 250;
+  return value > SENSOR_THRESHOLD;
 }
 
 void setup() {
-    left_motor.init(7, 8, 10, true);
-    right_motor.init(5, 6, 9);
+    left_motor.init(PIN_MOTOR_LEFT_IN1, PIN_MOTOR_LEFT_IN2, PIN_MOTOR_LEFT_PWM, true);
+    right_motor.init(PIN_MOTOR_RIGHT_IN1, PIN_MOTOR_RIGHT_IN2, PIN_MOTOR_RIGHT_PWM);
 }
 
 void forward() {
-    left_motor.set_speed(255);
-    right_motor.set_speed(255);
+    left_motor.set_speed(MOTOR_TOP_SPEED);
+    right_motor.set_speed(MOTOR_TOP_SPEED);
 }
 
 void left() {
     left_motor.set_speed(0);
-    right_motor.set_speed(255);
+    right_motor.set_speed(MOTOR_TOP_SPEED);
 }
 
 void right() {
-    left_motor.set_speed(255);
+    left_motor.set_speed(MOTOR_TOP_SPEED);
     right_motor.set_speed(0);
 }
 
 void loop() {
-    int left_value = analogRead(A5);
-    int right_value = analogRead(A4);
+    int left_value = analogRead(PIN_SENSOR_LEFT);
+    int right_value = analogRead(PIN_SENSOR_RIGHT);
 
     bool sensor_left = is_line(left_value);
     bool sensor_right = is_line(right_value);
