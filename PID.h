@@ -6,6 +6,8 @@ public:
 	double ki = 0.0;
 	double kd = 0.0;
 
+  PID(double kp, double ki, double kd) : kp(kd), ki(ki), kd(kd) {}
+
 	double update(double error);
 
 private:

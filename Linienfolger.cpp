@@ -20,57 +20,61 @@ void Linienfolger::update() {
 	}  
 }
 
-void Linienfolger::forward(int speed) {
-	left_motor.set_speed(speed);
-	right_motor.set_speed(speed);
-	last_time_left = false;
-	last_time_right = false;
-}
-
-void Linienfolger::left(int speed) {
-	left_motor.set_speed(0);
-	right_motor.set_speed(speed);
-	last_time_left = true;
-	last_time_right = false;
-}
-
-void Linienfolger::right(int speed) {
-	left_motor.set_speed(speed);
-	right_motor.set_speed(0);
-	last_time_right = true;
-	last_time_left = false;
-}
-
 void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed) {
-	if (!line_left && !line_right) {
-		if (last_time_left)
-			left(speed);
-		else if (last_time_right)
-			right(speed);
-		else
-			forward(speed);
+	/*if (!line_left && !line_right) {
+		if (last_time_left) {
+      left_motor.set_speed(0);
+      right_motor.set_speed(speed);
+		}
+		else if (last_time_right) {
+      left_motor.set_speed(speed);
+      right_motor.set_speed(0);
+		}
+		else {
+      left_motor.set_speed(speed);
+      right_motor.set_speed(speed);
+		}
 		return;
-	}
+	}*/
 
+  last_time_left = false;
+  last_time_right = false;
+  if (line_left)
+    last_time_left = true;
+  if (line_right)
+    last_time_right = true;
 
-	if (line_left && !line_right)
+  double error = 0.0;
+  if (line_left)
+    error = 1.0;
+  else if (line_right)
+    error = -1.0;
+  
+  double pid_output = pid.update(error);
+  left_motor.set_speed(180 - pid_output);
+  right_motor.set_speed(180 + pid_output);
+	/*if (line_left && !line_right)
 		left(speed);
 	else if (line_right && !line_left)
 		right(speed);
 	else
-		forward(speed);
+		forward(speed);*/
 }
 
 void Linienfolger::update_links_ausweichen(bool line_left, bool line_right) {
-	if (line_left)
-		left(MOTOR_AUSWEICH_SPEED);
+	if (line_left) {
+    left_motor.set_speed(0);
+    right_motor.set_speed(MOTOR_AUSWEICH_SPEED);
+	}
 	else
 		update_folge_linie(line_left, line_right, MOTOR_AUSWEICH_SPEED);
 }
 
 void Linienfolger::update_rechts_ausweichen(bool line_left, bool line_right) {
-	if (line_right)
-		right(MOTOR_AUSWEICH_SPEED);
+	if (line_right) {
+    left_motor.set_speed(MOTOR_AUSWEICH_SPEED);
+    right_motor.set_speed(0);
+	}
 	else
 		update_folge_linie(line_left, line_right, MOTOR_AUSWEICH_SPEED);
 }

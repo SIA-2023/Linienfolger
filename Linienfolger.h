@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arduino.h"
+#include "PID.h"
 
 #define PIN_SENSOR_LEFT A5
 #define PIN_SENSOR_RIGHT A4
@@ -33,11 +34,9 @@ public:
 
 	Mode mode = Mode::FolgeLinie;
 
-private:
-	void forward(int speed);
-	void left(int speed);
-	void right(int speed);
+  PID pid = PID(0.8, 0.0005, 0.0);
 
+private:
 	void update_folge_linie(bool line_left, bool line_right, int speed);
 	void update_links_ausweichen(bool line_left, bool line_right);
 	void update_rechts_ausweichen(bool line_left, bool line_right);

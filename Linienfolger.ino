@@ -1,7 +1,6 @@
 #include "Linienfolger.h"
 #include "Fernbedienung.h"
 
-// Fernbedienung wurde noch nicht getestet!
 Fernbedienung fernbedienung;
 Linienfolger linienfolger;
 
