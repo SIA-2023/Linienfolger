@@ -12,7 +12,6 @@ void setup() {
 }
 
 void loop() {
-	/* Wurde noch nicht getested!
 	if (fernbedienung.has_received_new()) {
 		switch (fernbedienung.get_current_command()) {
 		case Fernbedienung::Command::Taster1:	linienfolger.mode = Linienfolger::Mode::FolgeLinie; break;
@@ -20,7 +19,6 @@ void loop() {
 		case Fernbedienung::Command::Taster3:	linienfolger.mode = Linienfolger::Mode::RechtsAusweichen; break;
 		}
 	}
-	*/
 
 	linienfolger.update();
 }
