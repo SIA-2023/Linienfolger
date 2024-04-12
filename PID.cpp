@@ -2,8 +2,8 @@
 #include "Arduino.h"
 
 double PID::update(double error) {
-	unsigned long now = micros();
-	double delta_time = (double)(now - prev_micros);
+	unsigned long now = millis();
+	double delta_time = (double)(now - prev_millis);
 	
 	// integral
 	error_sum += (error * delta_time);
@@ -13,7 +13,7 @@ double PID::update(double error) {
 	double output = kp * error + ki * error_sum + kd * derivative;
 
 	last_error = error;
-	prev_micros = now;
+	prev_millis = now;
 
 	return output;
 }

@@ -11,7 +11,7 @@ public:
 	double update(double error);
 
 private:
-	unsigned long prev_micros = 0;
+	unsigned long prev_millis = 0;
 	double error_sum = 0.0;
 	double last_error = 0.0;
 };
