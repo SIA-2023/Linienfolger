@@ -34,18 +34,25 @@ public:
 
 	Mode mode = Mode::FolgeLinie;
 
-  PID pid = PID(0.8, 0.0005, 0.0);
+  PID pid = PID(0.5, 0.75, 1.0, 127.0);
+  
+  bool last_time_left = false;
+  bool last_time_right = false;
 
+  int last_motor_left = 0;
+  int last_motor_right = 0;
+  
 private:
 	void update_folge_linie(bool line_left, bool line_right, int speed);
 	void update_links_ausweichen(bool line_left, bool line_right);
 	void update_rechts_ausweichen(bool line_left, bool line_right);
 
+  void set_left_motor(int speed);
+  void set_right_motor(int speed);
+
 	static bool is_line(int value);
 
 private:
-	Motor left_motor;
-	Motor right_motor;
-	bool last_time_left = false;
-	bool last_time_right = false;
+  Motor left_motor;
+  Motor right_motor;
 };

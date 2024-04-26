@@ -5,8 +5,13 @@ public:
 	double kp = 0.0;
 	double ki = 0.0;
 	double kd = 0.0;
+  double max_output_range = 0.0;
 
-  PID(double kp, double ki, double kd) : kp(kd), ki(ki), kd(kd) {}
+  PID(double kp, double ki, double kd, double max_output_range)
+    : kp(kd),
+      ki(ki),
+      kd(kd),
+      max_output_range(max_output_range) {}
 
 	double update(double error);
 
