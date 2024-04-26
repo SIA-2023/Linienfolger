@@ -17,7 +17,7 @@
 #define PIN_MOTOR_RIGHT_PWM 9
 
 #define MOTOR_TOP_SPEED 255
-#define MOTOR_AUSWEICH_SPEED 150
+#define MOTOR_AUSWEICH_SPEED 125
 
 #include "Motor.h"
 

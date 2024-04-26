@@ -21,22 +21,6 @@ void Linienfolger::update() {
 }
 
 void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed) {
-	/*if (!line_left && !line_right) {
-		if (last_time_left) {
-      left_motor.set_speed(0);
-      right_motor.set_speed(speed);
-		}
-		else if (last_time_right) {
-      left_motor.set_speed(speed);
-      right_motor.set_speed(0);
-		}
-		else {
-      left_motor.set_speed(speed);
-      right_motor.set_speed(speed);
-		}
-		return;
-	}*/
-
   last_time_left = false;
   last_time_right = false;
   if (line_left)
@@ -53,12 +37,6 @@ void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed
   double pid_output = pid.update(error);
   set_left_motor(127 - pid_output);
   set_right_motor(127 + pid_output);
-	/*if (line_left && !line_right)
-		left(speed);
-	else if (line_right && !line_left)
-		right(speed);
-	else
-		forward(speed);*/
 }
 
 void Linienfolger::update_links_ausweichen(bool line_left, bool line_right) {
@@ -66,8 +44,14 @@ void Linienfolger::update_links_ausweichen(bool line_left, bool line_right) {
     set_left_motor(0);
     set_right_motor(MOTOR_AUSWEICH_SPEED);
 	}
-	else
-		update_folge_linie(line_left, line_right, MOTOR_AUSWEICH_SPEED);
+	else if (!line_right) {
+    set_left_motor(MOTOR_AUSWEICH_SPEED);
+    set_right_motor(MOTOR_AUSWEICH_SPEED);
+	}
+  else {
+    set_left_motor(MOTOR_AUSWEICH_SPEED);
+    set_right_motor(0);
+  }
 }
 
 void Linienfolger::update_rechts_ausweichen(bool line_left, bool line_right) {
@@ -75,8 +59,14 @@ void Linienfolger::update_rechts_ausweichen(bool line_left, bool line_right) {
     set_left_motor(MOTOR_AUSWEICH_SPEED);
     set_right_motor(0);
 	}
-	else
-		update_folge_linie(line_left, line_right, MOTOR_AUSWEICH_SPEED);
+	else if (!line_left) {
+    set_left_motor(MOTOR_AUSWEICH_SPEED);
+    set_right_motor(MOTOR_AUSWEICH_SPEED);
+	}
+  else {
+    set_left_motor(0);
+    set_right_motor(MOTOR_AUSWEICH_SPEED);
+  }
 }
 
 void Linienfolger::set_left_motor(int speed) {

@@ -1,7 +1,7 @@
 #include "Linienfolger.h"
 #include "Fernbedienung.h"
 
-#define ENABLE_DASHBOARD 1
+#define ENABLE_DASHBOARD 0
 
 Fernbedienung fernbedienung;
 Linienfolger linienfolger;
@@ -39,6 +39,9 @@ void loop() {
 		}
 	}
 
+  // NUR ZUM TESTEN OHNE FERNBEDIENUNG
+  //linienfolger.mode = Linienfolger::Mode::RechtsAusweichen;
+	
 	linienfolger.update();
 
 #if ENABLE_DASHBOARD
@@ -46,9 +49,9 @@ void loop() {
   Serial.print(',');
   Serial.print(linienfolger.last_motor_right);
   Serial.print(',');
-  Serial.print(linienfolger.last_time_left);//left_sensor);
+  Serial.print(linienfolger.last_time_left);
   Serial.print(',');
-  Serial.print(linienfolger.last_time_right);//right_sensor);
+  Serial.print(linienfolger.last_time_right);
   Serial.print(',');
   Serial.print((float)linienfolger.pid.kp);
   Serial.print(',');
