@@ -14,29 +14,31 @@ void Linienfolger::update() {
 	bool line_right = is_line(analogRead(PIN_SENSOR_RIGHT));
 
 	switch (mode) {
-	case Mode::FolgeLinie:			update_folge_linie(line_left, line_right, MOTOR_TOP_SPEED); break;
+	case Mode::FolgeLinie:			update_folge_linie(line_left, line_right, MOTOR_FOLGE_LINIE_SPEED); break;
 	case Mode::LinksAusweichen:		update_links_ausweichen(line_left, line_right);	break;
 	case Mode::RechtsAusweichen:	update_rechts_ausweichen(line_left, line_right); break;
 	}  
 }
 
 void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed) {
-  last_time_left = false;
-  last_time_right = false;
+  last_sensor_left = false;
+  last_sensor_right = false;
   if (line_left)
-    last_time_left = true;
+    last_sensor_left = true;
   if (line_right)
-    last_time_right = true;
+    last_sensor_right = true;
 
   double error = 0.0;
   if (line_left)
     error = 1.0;
   else if (line_right)
     error = -1.0;
+  if (line_left && line_right)
+    error = 0.0;
   
   double pid_output = pid.update(error);
-  set_left_motor(127 - pid_output);
-  set_right_motor(127 + pid_output);
+  set_left_motor(speed - pid_output);
+  set_right_motor(speed + pid_output);
 }
 
 void Linienfolger::update_links_ausweichen(bool line_left, bool line_right) {

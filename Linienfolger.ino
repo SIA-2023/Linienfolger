@@ -2,12 +2,18 @@
 #include "Fernbedienung.h"
 
 #define ENABLE_DASHBOARD 0
+#define ENABLE_FERNBEDIENUNG 0
 
+#if ENABLE_FERNBEDIENUNG
 Fernbedienung fernbedienung;
+#endif
 Linienfolger linienfolger;
 
 void setup() {
+#if ENABLE_FERNBEDIENUNG
 	fernbedienung.setup();
+#endif
+
 	linienfolger.setup();
 	linienfolger.mode = Linienfolger::Mode::FolgeLinie;
 
@@ -30,7 +36,8 @@ void loop() {
     }
   }
 #endif
-  
+
+#if ENABLE_FERNBEDIENUNG
 	if (fernbedienung.has_received_new()) {
 		switch (fernbedienung.get_current_command()) {
 		case Fernbedienung::Command::Taster1:	linienfolger.mode = Linienfolger::Mode::FolgeLinie; break;
@@ -38,6 +45,7 @@ void loop() {
 		case Fernbedienung::Command::Taster3:	linienfolger.mode = Linienfolger::Mode::RechtsAusweichen; break;
 		}
 	}
+#endif
 
   // NUR ZUM TESTEN OHNE FERNBEDIENUNG
   //linienfolger.mode = Linienfolger::Mode::RechtsAusweichen;
@@ -49,9 +57,9 @@ void loop() {
   Serial.print(',');
   Serial.print(linienfolger.last_motor_right);
   Serial.print(',');
-  Serial.print(linienfolger.last_time_left);
+  Serial.print(linienfolger.last_sensor_left);
   Serial.print(',');
-  Serial.print(linienfolger.last_time_right);
+  Serial.print(linienfolger.last_sensor_right);
   Serial.print(',');
   Serial.print((float)linienfolger.pid.kp);
   Serial.print(',');
