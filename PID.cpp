@@ -12,7 +12,7 @@ double PID::update(double error) {
   if (error_sum < -max_integrate) error_sum = -max_integrate;
   if (error_sum > max_integrate) error_sum = max_integrate;
 
-	double derivative;
+	double derivative = 0.0;
   if (delta_time != 0.0)
     derivative = (error - last_error) / delta_time;
 

@@ -34,7 +34,7 @@ public:
 
 	Mode mode = Mode::FolgeLinie;
 
-  PID pid = PID(0.5, 0.5, 1.0, 127.0);
+  PID pid = PID(0.5, 0.5, 1.0, 127.5);
   
   bool last_sensor_left = false;
   bool last_sensor_right = false;
