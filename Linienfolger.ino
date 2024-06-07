@@ -1,12 +1,16 @@
-#include "Linienfolger.h"
-#include "Fernbedienung.h"
-
 #define ENABLE_DASHBOARD 0
 #define ENABLE_FERNBEDIENUNG 0
 
+#if ENABLE_DASHBOARD
+#include "Dashboard.h"
+#endif
+
 #if ENABLE_FERNBEDIENUNG
+#include "Fernbedienung.h"
 Fernbedienung fernbedienung;
 #endif
+
+#include "Linienfolger.h"
 Linienfolger linienfolger;
 
 void setup() {
@@ -16,27 +20,13 @@ void setup() {
 
 	linienfolger.setup();
 	linienfolger.mode = Linienfolger::Mode::FolgeLinie;
-
+ 
 #if ENABLE_DASHBOARD
-  Serial.begin(115200);
+  Dashboard::setup();
 #endif
 }
 
 void loop() {
-#if ENABLE_DASHBOARD
-  if (Serial.available()) {
-    // format: "{target}{value}\n";
-    String command = Serial.readStringUntil('\n');
-    char target = command.charAt(0);
-    double value = command.substring(1).toFloat();
-    switch (target) {
-      case 'p': linienfolger.pid.kp = value; break;
-      case 'i': linienfolger.pid.ki = value; break;
-      case 'd': linienfolger.pid.kd = value; break;
-    }
-  }
-#endif
-
 #if ENABLE_FERNBEDIENUNG
 	if (fernbedienung.has_received_new()) {
 		switch (fernbedienung.get_current_command()) {
@@ -47,25 +37,13 @@ void loop() {
 	}
 #endif
 
-  // NUR ZUM TESTEN OHNE FERNBEDIENUNG
-  //linienfolger.mode = Linienfolger::Mode::RechtsAusweichen;
-	
+#if ENABLE_DASHBOARD
+  Dashboard::daten_empfangen(linienfolger);
+#endif
+
 	linienfolger.update();
 
 #if ENABLE_DASHBOARD
-  Serial.print(linienfolger.last_motor_left);
-  Serial.print(',');
-  Serial.print(linienfolger.last_motor_right);
-  Serial.print(',');
-  Serial.print(linienfolger.last_sensor_left);
-  Serial.print(',');
-  Serial.print(linienfolger.last_sensor_right);
-  Serial.print(',');
-  Serial.print((float)linienfolger.pid.kp);
-  Serial.print(',');
-  Serial.print((float)linienfolger.pid.ki);
-  Serial.print(',');
-  Serial.print((float)linienfolger.pid.kd);
-  Serial.print('\n');
+  Dashboard::daten_senden(linienfolger);
 #endif
 }
