@@ -8,7 +8,7 @@ public:
   double max_output_range = 0.0;
 
   PID(double kp, double ki, double kd, double max_output_range)
-    : kp(kd),
+    : kp(kp),
       ki(ki),
       kd(kd),
       max_output_range(max_output_range) {}
