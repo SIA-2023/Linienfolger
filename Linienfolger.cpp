@@ -13,6 +13,13 @@ void Linienfolger::update() {
 	bool line_left = is_line(analogRead(PIN_SENSOR_LEFT));
 	bool line_right = is_line(analogRead(PIN_SENSOR_RIGHT));
 
+  last_sensor_left = false;
+  last_sensor_right = false;
+  if (line_left)
+    last_sensor_left = true;
+  if (line_right)
+    last_sensor_right = true;
+
 	switch (mode) {
 	case Mode::FolgeLinie:			update_folge_linie(line_left, line_right, MOTOR_FOLGE_LINIE_SPEED); break;
 	case Mode::LinksAusweichen:		update_links_ausweichen(line_left, line_right);	break;
@@ -21,13 +28,6 @@ void Linienfolger::update() {
 }
 
 void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed) {
-  last_sensor_left = false;
-  last_sensor_right = false;
-  if (line_left)
-    last_sensor_left = true;
-  if (line_right)
-    last_sensor_right = true;
-
   double error = 0.0;
   if (line_left)
     error = 1.0;
@@ -44,30 +44,20 @@ void Linienfolger::update_folge_linie(bool line_left, bool line_right, int speed
 void Linienfolger::update_links_ausweichen(bool line_left, bool line_right) {
 	if (line_left) {
     set_left_motor(0);
-    set_right_motor(MOTOR_AUSWEICH_SPEED);
-	}
-	else if (!line_right) {
-    set_left_motor(MOTOR_AUSWEICH_SPEED);
-    set_right_motor(MOTOR_AUSWEICH_SPEED);
+    set_right_motor(255);//MOTOR_AUSWEICH_SPEED);
 	}
   else {
-    set_left_motor(MOTOR_AUSWEICH_SPEED);
-    set_right_motor(0);
+    update_folge_linie(line_left, line_right, MOTOR_FOLGE_LINIE_SPEED);
   }
 }
 
 void Linienfolger::update_rechts_ausweichen(bool line_left, bool line_right) {
 	if (line_right) {
-    set_left_motor(MOTOR_AUSWEICH_SPEED);
+    set_left_motor(255);//MOTOR_AUSWEICH_SPEED);
     set_right_motor(0);
 	}
-	else if (!line_left) {
-    set_left_motor(MOTOR_AUSWEICH_SPEED);
-    set_right_motor(MOTOR_AUSWEICH_SPEED);
-	}
   else {
-    set_left_motor(0);
-    set_right_motor(MOTOR_AUSWEICH_SPEED);
+    update_folge_linie(line_left, line_right, MOTOR_FOLGE_LINIE_SPEED);
   }
 }
 

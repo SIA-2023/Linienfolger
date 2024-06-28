@@ -16,8 +16,8 @@
 #define PIN_MOTOR_RIGHT_IN2 6
 #define PIN_MOTOR_RIGHT_PWM 9
 
-#define MOTOR_FOLGE_LINIE_SPEED 127
-#define MOTOR_AUSWEICH_SPEED 125
+#define MOTOR_FOLGE_LINIE_SPEED 130
+#define MOTOR_AUSWEICH_SPEED 145
 
 #include "Motor.h"
 
@@ -34,7 +34,7 @@ public:
 
 	Mode mode = Mode::FolgeLinie;
 
-  PID pid = PID(0.5, 0.5, 1.0, 127.5);
+  PID pid = PID(35.0, 0.055, 1000.0, 150.0);
   
   bool last_sensor_left = false;
   bool last_sensor_right = false;
